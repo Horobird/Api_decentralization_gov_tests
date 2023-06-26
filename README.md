@@ -13,4 +13,7 @@ ________
    - In the request to each region separately, the parameters of the area object are already being tested using the "tv4" library with error messages output to the console. The "pre-request" contains a code that provides a random selection of the region during the subsequent iteration of the test.
    - 
 ![image](https://github.com/Horobird/Api_decentralization_gov_tests/assets/28702124/a785a49e-4b07-455a-ac75-dd1a2067e5e9)
-I will be glad not only that this example may be useful to someone, but also grateful if I receive comments and corrections to it.
+_______
+
+    :point_up: I will be glad not only that this example may be useful to someone, but also grateful if I receive comments and corrections to it.
+   
