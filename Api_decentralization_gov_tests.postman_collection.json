@@ -1,0 +1,393 @@
+{
+	"info": {
+		"_postman_id": "9ca8072e-2499-4f51-bca6-3cd4c0c15c32",
+		"name": "Api_decentralization_gov_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25559098",
+		"_collection_link": "https://web.postman.co/workspace/MyTests~c6c016ce-cddf-4ead-8827-76adfe5f7fb7/collection/25559098-9ca8072e-2499-4f51-bca6-3cd4c0c15c32?action=share&creator=25559098&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "List of all areas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Переменная коллекции кол-во регионов\r",
+							"pm.environment.set(\"sumRegions\", pm.response.json().data.areas.length);\r",
+							"const responseJson = pm.response.json();\r",
+							"// Переменная типа значения свойства ключа\r",
+							"let typeKey;\r",
+							"// Массив ключей для areas\r",
+							"const areaKeys = ['title', 'id', 'square', 'population', 'local_community_count', 'percent_communities_from_area', 'sum_communities_square']\r",
+							"\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check text 'error'\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.include('error');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response must be valid and have a header 'Server'\", function () {\r",
+							"     pm.response.to.be.header('Server');\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response must be valid and have a header 'Content-Type'\", function () {\r",
+							"    pm.response.to.be.header('Content-Type')\r",
+							"});\r",
+							"\r",
+							"pm.test('Checks the number of regions ', function() {\r",
+							"pm.expect(pm.environment.get(\"sumRegions\")).to.eql(25);\r",
+							"})\r",
+							"\r",
+							"pm.test('Not valid test for id less than lower bound (0)', function() {\r",
+							"    for (let area=0; area < pm.environment.get(\"samRegions\"); area++) {\r",
+							"        pm.expect(pm.response.json().data.areas[area].id).to.not.eq(0)\r",
+							"    }\r",
+							"\r",
+							"})\r",
+							"\r",
+							"pm.test('Not valid test for id greater than upper bound (total number of areas)', function() {\r",
+							"    for (let area=0; area < pm.environment.get(\"samRegions\"); area++) {\r",
+							"        pm.expect(pm.response.json().data.areas[area].id).to.not.eq(pm.variables.get(\"samRegions\")+4)\r",
+							"    }\r",
+							"\r",
+							"})\r",
+							"\r",
+							"pm.test('Not valid test for id greater 26 and 27', function() {\r",
+							"    for (let area=0; area < pm.variables.get(\"samRegions\"); area++) {\r",
+							"        pm.expect(pm.response.json().data.areas[area].id).to.not.eq(26);\r",
+							"        pm.expect(pm.response.json().data.areas[area].id).to.not.eq(27);\r",
+							"    }\r",
+							"\r",
+							"})\r",
+							"\r",
+							"for (let areaKey of areaKeys) {\r",
+							"    if (areaKey==='title') {\r",
+							"         typeKey = 'string'} else {\r",
+							" typeKey = 'number', 'null'\r",
+							"    }\r",
+							"    console.log('typeKey =', typeKey)\r",
+							"//  pm.test(`Checking that all ${areaKey} are filled`, function() {\r",
+							"for (let area=0; area < pm.variables.get(\"samRegions\"); area++) {\r",
+							"    if (area === pm.variables.get('sumRegions')-1) {\r",
+							"     if (areaKey === 'percent_communities_from_area' || areaKey === 'sum_communities_square' )  { \r",
+							"         typeKey = 'null'\r",
+							"         }\r",
+							"    }\r",
+							"   pm.test(`Checking that  ${areaKey} area N${area} are valid`, () =>{\r",
+							"      pm.expect(responseJson.data.areas[area]).to.have.any.key(areaKey);\r",
+							"      pm.expect(responseJson.data.areas[area][`${areaKey}`]).to.be.a(typeKey)\r",
+							"    console.log(`areaKey = ${areaKey} area=${area} ` )\r",
+							"    })\r",
+							"  }\r",
+							"   \r",
+							" }\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}?query={areas{title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}",
+					"host": [
+						"{{url}}"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "{areas{title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of all areas not valid url",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Not valid url', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/v1/?query={areas{title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "{areas{title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checking the properties of each region",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" const param = pm.response.json()\r",
+							"  pm.environment.set('samHeaders', pm.response.headers.all().length);\r",
+							" const schema = {\r",
+							"     'type' : 'object',\r",
+							"     'properties':{\r",
+							"         'data':{\r",
+							"            'type': 'object',\r",
+							"             'properties':{\r",
+							"                'area': {\r",
+							"                 'type' :   'object',\r",
+							"                'properties': {\r",
+							"                        'title': {\r",
+							"                            'type': 'string'\r",
+							"                            },\r",
+							"                        'id': {\r",
+							"                            'type' : 'number',\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                            },\r",
+							"                        'square': {\r",
+							"                            'type': 'integer',\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                             },                        \r",
+							"                        'population': {\r",
+							"                            'type': 'number',\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                        },\r",
+							"                        'local_community_count': {\r",
+							"                            'type': 'number',\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                        },\r",
+							"                        'percent_communities_from_area': {\r",
+							"                            'type': ['number', null]\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                        },\r",
+							"                        'sum_communities_square': {\r",
+							"                            'type': ['number', null]\r",
+							"                            // 'exclusiveMinimum': 0\r",
+							"                        \r",
+							"                        }\r",
+							"                        \r",
+							"                    \r",
+							"                },\r",
+							"               'required': ['title', 'id', 'square', 'population', 'local_community_count', 'percent_communities_from_area', 'sum_communities_square']  \r",
+							"            }\r",
+							"        },\r",
+							"          \r",
+							"    },\r",
+							"    'required': ['data', 'area']\r",
+							" }\r",
+							" }\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check text 'error'\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.include('error');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must be valid and have a body\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test('header count check', () => {\r",
+							"    pm.expect(pm.environment.get('samHeaders')).to.be.eq(17)\r",
+							"})\r",
+							"pm.test(\"response must be valid and have a header 'X-Request-Id'\", function () {\r",
+							"     pm.response.to.be.header('X-Request-Id');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response must be valid and have a header 'Date'\", function () {\r",
+							"    pm.response.to.be.header('Date')\r",
+							"});\r",
+							"\r",
+							"pm.test('Checks that area is not array (regions is one) ', function() {\r",
+							" pm.expect(pm.response.json().data.areas).to.not.be.an(\"array\")\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});\r",
+							"\r",
+							"pm.test('Schema is valid', () => {\r",
+							"    let contrValid = tv4.validateMultiple(param, schema, false, true);\r",
+							"    if (!contrValid.valiv) {\r",
+							"        for (error of contrValid.errors) {\r",
+							"            console.log('Validate error:', error)\r",
+							"        }\r",
+							"    }\r",
+							"    param;\r",
+							"    pm.expect(contrValid.valid).to.be.true;\r",
+							"})\r",
+							"console.log(pm.response.headers.all())\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//Функция для рандомного выбора id\r",
+							"let min=1\r",
+							"let max= pm.environment.get('sumRegions')+4\r",
+							"function random( min, max) {\r",
+							"  min = Math.ceil(min);\r",
+							"  max = Math.floor(max);\r",
+							"  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\r",
+							"}\r",
+							"const goNextArea = () => {\r",
+							"\r",
+							"if (random(min, max) === 8 || random(min, max) === 26 || random(min, max) === 27) { return randomID= random(min, max)-3 } else {\r",
+							"   return randomID = random(min, max)\r",
+							"}}\r",
+							"  pm.environment.set('randomID', goNextArea())"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}?query={area(id: \"{{randomID}}\"){title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}",
+					"host": [
+						"{{url}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "query",
+							"value": "{area(id: \"{{randomID}}\"){title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checking cookies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Checking my cookies', () => {\r",
+							"    pm.expect(pm.cookies.get('testCookies')).to.eql('158')\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}?query={area(id: \"2\"){title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}",
+					"host": [
+						"{{url}}"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "{area(id: \"2\"){title,id,square,population,local_community_count,percent_communities_from_area,sum_communities_square}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://decentralization.gov.ua/graphql"
+		},
+		{
+			"key": "url",
+			"value": ""
+		},
+		{
+			"key": "sumRegions",
+			"value": ""
+		},
+		{
+			"key": "variable_key",
+			"value": ""
+		},
+		{
+			"key": "samRegions",
+			"value": ""
+		}
+	]
+}
