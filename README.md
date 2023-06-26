@@ -15,5 +15,5 @@ ________
 ![image](https://github.com/Horobird/Api_decentralization_gov_tests/assets/28702124/a785a49e-4b07-455a-ac75-dd1a2067e5e9)
 _______
 
-    :point_up: I will be glad not only that this example may be useful to someone, but also grateful if I receive comments and corrections to it.
+  :point_up: I will be glad not only that this example may be useful to someone, but also grateful if I receive comments and corrections to it.
    
