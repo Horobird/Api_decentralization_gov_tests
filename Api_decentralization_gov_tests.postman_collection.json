@@ -4,12 +4,21 @@
 		"name": "Api_decentralization_gov_tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25559098",
-		"_collection_link": "https://web.postman.co/workspace/MyTests~c6c016ce-cddf-4ead-8827-76adfe5f7fb7/collection/25559098-9ca8072e-2499-4f51-bca6-3cd4c0c15c32?action=share&creator=25559098&source=collection_link"
+		"_collection_link": "https://winter-capsule-746861.postman.co/workspace/MyTests~c6c016ce-cddf-4ead-8827-76adfe5f7fb7/collection/25559098-9ca8072e-2499-4f51-bca6-3cd4c0c15c32?action=share&creator=25559098&source=collection_link"
 	},
 	"item": [
 		{
 			"name": "List of all areas",
 			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
 				{
 					"listen": "test",
 					"script": {
@@ -76,8 +85,7 @@
 							"         typeKey = 'string'} else {\r",
 							" typeKey = 'number', 'null'\r",
 							"    }\r",
-							"    console.log('typeKey =', typeKey)\r",
-							"//  pm.test(`Checking that all ${areaKey} are filled`, function() {\r",
+							"  \r",
 							"for (let area=0; area < pm.variables.get(\"samRegions\"); area++) {\r",
 							"    if (area === pm.variables.get('sumRegions')-1) {\r",
 							"     if (areaKey === 'percent_communities_from_area' || areaKey === 'sum_communities_square' )  { \r",
@@ -87,7 +95,7 @@
 							"   pm.test(`Checking that  ${areaKey} area N${area} are valid`, () =>{\r",
 							"      pm.expect(responseJson.data.areas[area]).to.have.any.key(areaKey);\r",
 							"      pm.expect(responseJson.data.areas[area][`${areaKey}`]).to.be.a(typeKey)\r",
-							"    console.log(`areaKey = ${areaKey} area=${area} ` )\r",
+							"    \r",
 							"    })\r",
 							"  }\r",
 							"   \r",
@@ -96,15 +104,6 @@
 							"pm.test(\"Response time is less than 800ms\", function () {\r",
 							"    pm.expect(pm.response.responseTime).to.be.below(800);})\r",
 							"\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
 							""
 						],
 						"type": "text/javascript"
@@ -178,6 +177,32 @@
 			"name": "Checking the properties of each region",
 			"event": [
 				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//Функция для рандомного выбора id\r",
+							"let min=1\r",
+							"let max= pm.environment.get('sumRegions')+4\r",
+							"function random( min, max) {\r",
+							"  min = Math.ceil(min);\r",
+							"  max = Math.floor(max);\r",
+							"  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\r",
+							"}\r",
+							"const goNextArea = () => {\r",
+							"const rand = random(min, max)\r",
+							"if (rand === 8 || rand === 26 || rand === 27) { \r",
+							"    return randomID= rand-3 \r",
+							"    // pm.environment.set('randomID', rand-3)\r",
+							"    } else {\r",
+							"  return randomID = rand\r",
+							"//    pm.environment.set('randomID', rand)\r",
+							"}}\r",
+							"  pm.environment.set('randomID', goNextArea())"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
 					"listen": "test",
 					"script": {
 						"exec": [
@@ -213,11 +238,11 @@
 							"                            // 'exclusiveMinimum': 0\r",
 							"                        },\r",
 							"                        'percent_communities_from_area': {\r",
-							"                            'type': ['number', null]\r",
+							"                            'type': ['number', 'null']\r",
 							"                            // 'exclusiveMinimum': 0\r",
 							"                        },\r",
 							"                        'sum_communities_square': {\r",
-							"                            'type': ['number', null]\r",
+							"                            'type': ['number', 'null']\r",
 							"                            // 'exclusiveMinimum': 0\r",
 							"                        \r",
 							"                        }\r",
@@ -264,7 +289,7 @@
 							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
 							"});\r",
 							"\r",
-							"pm.test('Schema is valid', () => {\r",
+							"pm.test(`Schema is valid`, () => {\r",
 							"    let contrValid = tv4.validateMultiple(param, schema, false, true);\r",
 							"    if (!contrValid.valiv) {\r",
 							"        for (error of contrValid.errors) {\r",
@@ -274,30 +299,8 @@
 							"    param;\r",
 							"    pm.expect(contrValid.valid).to.be.true;\r",
 							"})\r",
-							"console.log(pm.response.headers.all())\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"//Функция для рандомного выбора id\r",
-							"let min=1\r",
-							"let max= pm.environment.get('sumRegions')+4\r",
-							"function random( min, max) {\r",
-							"  min = Math.ceil(min);\r",
-							"  max = Math.floor(max);\r",
-							"  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive\r",
-							"}\r",
-							"const goNextArea = () => {\r",
 							"\r",
-							"if (random(min, max) === 8 || random(min, max) === 26 || random(min, max) === 27) { return randomID= random(min, max)-3 } else {\r",
-							"   return randomID = random(min, max)\r",
-							"}}\r",
-							"  pm.environment.set('randomID', goNextArea())"
+							""
 						],
 						"type": "text/javascript"
 					}
